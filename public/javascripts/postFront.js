@@ -11,8 +11,7 @@ const fetchDiv = document.getElementById("fetch-div")
 // const instructionsFetchL = document.getElementById("instructions-fetch-list")
 // const ingredientsFetchL = document.getElementById("ingredients-fetch-list")
 
-let instructionsArray = []
-let ingredientsArray = []
+let commentArray = [];
 
 const recipeDiv = document.getElementById("recipe-div")
 
@@ -226,11 +225,16 @@ submit.onclick = function(){
     }
     console.log(IdArray)
 
+    let questionBoxValue = document.getElementById("question-text").value
+    let commentBoxValue = document.getElementById("comment-text").value
+
+    commentArray.push(commentBoxValue);
+
     data = 
     {
         name: name,
-        instructions: instructionsArray,
-        ingredients: ingredientsArray,
+        question: questionBoxValue,
+        comments: commentArray,
         categories: IdArray,
         images: imageIdArray
     }
@@ -252,27 +256,8 @@ submit.onclick = function(){
 },200)
 }
 
-addInsBtn.onclick = function(){
 
-    const insText = document.getElementById("instructions-text").value
 
-    newListItem = document.createElement("li");
-    newListItem.innerHTML = insText
-    instructionsL.appendChild(newListItem)
-    instructionsArray.push(insText)
-
-}
-
-addIngBtn.onclick = function(){
-
-    const ingText = document.getElementById("ingredients-text").value
-
-    newListItem = document.createElement("li");
-    newListItem.innerHTML = ingText
-    ingredientsL.appendChild(newListItem)
-    ingredientsArray.push(ingText)
-
-}
 
 
 

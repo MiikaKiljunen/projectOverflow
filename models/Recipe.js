@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 
 let recipeSchema = new Schema({
     name: String,
-    instructions: Array,
-    ingredients: Array,
+    question: String,
+    comments: Array,
     categories: Array,
     images: Array
 });

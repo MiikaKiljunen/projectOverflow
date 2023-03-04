@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 
 module.exports = function(req,res,next){
     const authHeader = req.headers["authorization"];
+    console.log(req.headers)
     let token;
     if(authHeader){
         token = authHeader.split(" ")[1];
@@ -12,7 +13,7 @@ module.exports = function(req,res,next){
     if(token == null) return res.sendStatus(401);
     console.log("token found");
     jwt.verify(token, process.env.SECRET, function(err,user){
-        if(err)return res.sendStatus(401);  
+        if(err)return res.sendStatus(403);  
         req.user = user;
         next();
     });

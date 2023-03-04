@@ -19,6 +19,16 @@ const validateToken = require("../auth/validateToken.js")
 const bcrypt = require("bcryptjs");
 const {body, validationResult} = require("express-validator");
 
+let loginToken;
+
+
+
+
+
+router.get('/post/', function(req, res, next) {
+    res.render('postComment', { title: 'Ask a question' });
+});
+
 
 /* GET recipes page. */
 
@@ -29,7 +39,7 @@ router.get('/recipe/', function(req, res, next) {
             return next(err)
         }
         if(recipes){
-            console.log(recipes)
+            //console.log(recipes)
             return res.json(recipes);
         } else{
             return res.status(404).send("Recipes not found")
@@ -63,8 +73,8 @@ router.post('/recipe/', function(req, res, next) {
         if(!recipe) {
             new Recipe({
                 name: req.body.name,
-                instructions: req.body.instructions,
-                ingredients: req.body.ingredients,
+                question: req.body.question,
+                comments: req.body.comments,
                 categories: req.body.categories,
                 images: req.body.images
 
@@ -204,14 +214,29 @@ router.post('/images/', upload.array('images', 12), function(req, res, next) {
     res.send(req.files)
 });
 
+
+// ーーーーーーーーーーーーーーーーーーーーーーーー
+
+// LOGIN
+
+// ーーーーーーーーーーーーーーーーーーーーーーーー
+
+
+
+
+
 router.get('/private', validateToken, function(req, res, next) {
-    // User.find({}, function(err,users){
-    //     if(err) return next(err);
-    //     res.render("users", {users})
-    // })
-    console.log(req.body)
+    req.headers.authorization = "Bearer "+loginToken;
+    console.log(req.headers)
+
+    User.find({}, function(err,users){
+        if(err) return next(err);
+        res.render('postComment', { title: 'Ask a question' });
+    })
     res.send({"email": req.body.email})
 });
+
+//registering
 
 router.get('/user/register', function(req, res, next) {
     res.render('register');
@@ -286,6 +311,7 @@ function(req, res, next) {
                             expiresIn: 120
                         },
                         function(err,token){
+                            loginToken = token;
                             res.json({success: true, token, user})
                         }
                     )
