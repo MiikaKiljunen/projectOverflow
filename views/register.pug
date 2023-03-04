@@ -1,0 +1,13 @@
+extends layout 
+
+block content
+
+    script(type='text/javascript' src='/javascripts/registerFront.js' defer='defer')
+
+    h1 Register
+    //form(action="register" method="POST")
+    label(for="email") email
+        input(type="text" name="email" id="email" required)
+        label(for="password") Password
+        input(type="text" name="password" id="password" required)
+        button(class="btn" type="submit" id="submit") Register
