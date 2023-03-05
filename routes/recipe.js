@@ -63,6 +63,7 @@ router.post('/recipe/', function(req, res, next) {
             new Recipe({
                 name: req.body.name,
                 question: req.body.question,
+                code:req.body.code
 
             }).save((err) => {
                 if(err) {
@@ -337,7 +338,7 @@ function(req, res, next) {
                         jwtPayload,
                         process.env.SECRET,
                         {
-                            expiresIn: 120
+                            expiresIn: 1200
                         },
                         function(err,token){
                             res.cookie('jwt', token, { httpOnly: true });
