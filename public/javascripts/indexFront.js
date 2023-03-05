@@ -12,7 +12,7 @@ fetch("http://localhost:3000/recipe/", {
     .then(data => {
         console.log(data)
 
-        data.forEach(element => {
+        data.slice().reverse().forEach(element => { //slice and reverse so newest posts are shown first
 
             //create new elements for the different parts of a post and append them to the host element.
             let newSection = document.createElement("div");
