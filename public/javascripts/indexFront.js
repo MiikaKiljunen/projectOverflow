@@ -37,26 +37,34 @@ fetch("http://localhost:3000/recipe/", {
             let newCardDiv = document.createElement("div");
             newCardDiv.className = "card-panel hoverable";
 
+            let newLink = document.createElement("a")
+            newLink.href="/posts/"+element.name;
+
             newCardDiv.appendChild(newTitle);
             newCardDiv.appendChild(newPostText);
             newCardDiv.appendChild(newCommentSection);
-            newSection.appendChild(newCardDiv);
+            newLink.appendChild(newCardDiv);
+            newSection.appendChild(newLink);
             hostContainer.appendChild(newSection);
+
+
 
             //add a functionality to click a post, redirect the user to the post
 
-            newCardDiv.onclick = function(){
-                fetch("http://localhost:3000/posts/"+element.name, {
-            method: "get",
-            // headers: {
-            //     "Content-type": "application/json"
-            // },
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-            });
-            }
+
+
+            // newCardDiv.onclick = function(){
+            //     fetch("http://localhost:3000/posts/"+element.name, {
+            // method: "get",
+            // // headers: {
+            // //     "Content-type": "application/json"
+            // // },
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     console.log(data)
+            // });
+            // }
 
 
         });

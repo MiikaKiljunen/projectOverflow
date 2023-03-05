@@ -2,6 +2,10 @@ extends layout
 
 block content
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> 
+
     script(type='text/javascript' src='/javascripts/loginFront.js' defer='defer')
 
     h1 Login
@@ -10,4 +14,5 @@ block content
         input(type="text" name="email" id="email" required)
         label(for="password") Password
         input(type="text" name="password" id="password" required)
-        button(class="btn" type="submit" id="submit") Login
+        //<a href="/"><button type="submit", id="submit", class="btn">Submit</button></a>
+        button(onclick="location.href='/'" class="btn" type="submit" id="submit") Login

@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 let recipeSchema = new Schema({
     name: String,
     question: String,
+    code: String,
     comments: Array,
 });
 
