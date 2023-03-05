@@ -4,12 +4,6 @@ const password = document.getElementById("password")
 
 submit.onclick = function(){
 
-    console.log("trying to do login ffs")
-
-    // let formData = new FormData();
-    // formData.append("email",email.value);
-    // formData.append("password",password.value);
-
     let data = {
         password: password.value,
         email: email.value,

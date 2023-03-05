@@ -34,11 +34,15 @@ fetch("http://localhost:3000/recipe/", {
                 newCommentSection.appendChild(newCommentItem);
             });
 
+            //create a card for each post
+
             let newCardDiv = document.createElement("div");
             newCardDiv.className = "card-panel hoverable";
 
             let newLink = document.createElement("a")
             newLink.href="/posts/"+element.name;
+
+            //append children in the right order
 
             newCardDiv.appendChild(newTitle);
             newCardDiv.appendChild(newPostText);
@@ -46,26 +50,5 @@ fetch("http://localhost:3000/recipe/", {
             newLink.appendChild(newCardDiv);
             newSection.appendChild(newLink);
             hostContainer.appendChild(newSection);
-
-
-
-            //add a functionality to click a post, redirect the user to the post
-
-
-
-            // newCardDiv.onclick = function(){
-            //     fetch("http://localhost:3000/posts/"+element.name, {
-            // method: "get",
-            // // headers: {
-            // //     "Content-type": "application/json"
-            // // },
-            // })
-            // .then(response => response.json())
-            // .then(data => {
-            //     console.log(data)
-            // });
-            // }
-
-
         });
     })

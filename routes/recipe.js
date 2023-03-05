@@ -1,10 +1,7 @@
 const express = require('express');
 const multer  = require('multer');
-const upload = multer();
 const mongoose = require("mongoose");
 const Recipe = require("../models/Recipe.js")
-const Category = require("../models/Category.js")
-const Image = require("../models/Image.js")
 const User = require("../models/User.js")
 const router = express.Router();
 
@@ -25,7 +22,13 @@ router.use(bodyParser.json());
 
 
 
+//some routes are recipes because of the roots of the program. recipes are posts basically.
 
+
+router.get('/', validateToken, function(req, res, next) {
+    res.locals.user = req.user;
+    res.render('index')
+});
 
 router.get('/post/', validateToken, function(req, res, next) {
     res.locals.user = req.user;
@@ -33,7 +36,6 @@ router.get('/post/', validateToken, function(req, res, next) {
 });
 
 
-/* GET recipes page. */
 
 router.get('/recipe/', function(req, res, next) {
 
@@ -78,128 +80,6 @@ router.post('/recipe/', function(req, res, next) {
     })
 });
 
-router.post('/cat', function(req, res, next) {
-
-    Category.findOne({ name: req.body.name}, (err, category) => {
-        if(err) {
-            return next(err);
-        }
-        if(!category) {
-            new Category({
-                name: req.body.name,
-            }).save((err) => {
-                if(err) {
-                    return next(err);
-                }
-                return res.send(req.body)
-            });
-        }
-        else{
-            return res.status(403).send("Already has that category!")
-        }
-    })
-});
-
-/* GET special diet categories */
-
-
-router.get('/cat', function(req, res, next) {
-    Category.find({}, (err, categories) => {
-        if (err){
-            return next(err)
-        }
-        if(categories){
-            let catObject = []
-            for (let i=0;i<categories.length;i++){
-                catObject.push({"name": categories[i].name, "id": categories[i]._id})
-            }
-            console.log(catObject)
-
-            return res.json(catObject);
-        } else{
-            return res.status(404).send("Categories not found")
-        }
-    })
-});
-
-router.get('/imagenames/:id', function(req, res, next){
-    Image.find({name: req.params.id}, (err, images) => {
-        if (err){
-            return next(err)
-        }
-        if(images){
-            let imgObject = []
-            for (let i=0;i<images.length;i++){
-                imgObject.push({"id": images[i]._id})
-            }
-            console.log(imgObject)
-
-            return res.json(imgObject);
-        } else{
-            return res.status(404).send("Image names not found")
-        }
-    })
-});
-
-router.get('/images/:id', function(req, res, next){
-    Image.findOne({_id: req.params.id}, (err, images) => {
-        if (err){
-            return next(err)
-        }
-        if(images){
-            let mimetype = images.mimetype
-            let buffer = images.buffer.toString('base64')
-
-            res.setHeader('content-type', mimetype);
-            res.setHeader('content-disposition', 'inline');
-
-            let resObj = {
-
-                "mimetype": mimetype,
-                "buffer": buffer
-
-            }
-
-            return res.send(resObj);
-        } else{
-            return res.status(404).send("Images not found")
-        }
-    })
-});
-
-router.post('/images/', upload.array('images', 12), function(req, res, next) {
-
-    resBody = []
-
-    for(let i=0;i<req.files.length;i++){
-        console.log(req.files[i].originalname)
-
-        Image.findOne({ name: req.files[i].originalname}, (err, image) => {
-            if(err) {
-                return next(err);
-            }
-            if(!image) {
-                new Image({
-                    name: req.files[i].originalname,
-                    encoding: req.files[i].encoding,
-                    mimetype: req.files[i].mimetype,
-                    buffer: req.files[i].buffer
-
-                }).save((err) => {
-                    if(err) {
-                        return next(err);
-                    }
-                    //resBody.push(req.files[i])
-                });
-            }
-            // else{
-            //     return res.status(403).send("Already has that image!")
-            // }
-        })
-    }
-    //console.log(resBody)
-    res.send(req.files)
-});
 
 router.get('/posts/:id', validateToken, function(req, res, next) {
 
@@ -246,16 +126,6 @@ router.post('/newcomment/:id',function(req,res,next){
 
 
 
-
-
-
-
-
-router.get('/', validateToken, function(req, res, next) {
-    res.locals.user = req.user;
-    res.render('index')
-});
-
 //registering
 
 router.get('/user/register', function(req, res, next) {
@@ -298,6 +168,8 @@ function(req, res, next) {
     });
 });
 
+//logging in and out
+
 router.get('/user/login', function(req, res, next) {
     res.render('login');
 });
@@ -306,11 +178,6 @@ router.get('/user/logout', function(req, res, next) {
     res.clearCookie('jwt');
     res.redirect('/')
 });
-
-// router.post('/user/logout', (req, res) => {
-//     res.clearCookie('jwt');
-//     res.redirect('/');
-// });
 
 router.post('/user/login', 
 body("email").isLength({min: 3}).trim().escape(),
