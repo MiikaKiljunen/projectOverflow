@@ -10,11 +10,11 @@ fetch("http://localhost:3000/recipe/", {
         })
     .then(response => response.json())
     .then(data => {
-        //console.log(data)
+        console.log(data)
 
         data.forEach(element => {
 
-            //create new elements for the different parts of a post and append them to the element.
+            //create new elements for the different parts of a post and append them to the host element.
             let newSection = document.createElement("div");
             newSection.className = "section";
 
@@ -34,10 +34,30 @@ fetch("http://localhost:3000/recipe/", {
                 newCommentSection.appendChild(newCommentItem);
             });
 
+            let newCardDiv = document.createElement("div");
+            newCardDiv.className = "card-panel hoverable";
+
+            newCardDiv.appendChild(newTitle);
+            newCardDiv.appendChild(newPostText);
+            newCardDiv.appendChild(newCommentSection);
+            newSection.appendChild(newCardDiv);
             hostContainer.appendChild(newSection);
-            newSection.appendChild(newTitle);
-            newSection.appendChild(newPostText);
-            newSection.appendChild(newCommentSection);
+
+            //add a functionality to click a post, redirect the user to the post
+
+            newCardDiv.onclick = function(){
+                fetch("http://localhost:3000/posts/"+element.name, {
+            method: "get",
+            // headers: {
+            //     "Content-type": "application/json"
+            // },
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+            });
+            }
+
 
         });
     })

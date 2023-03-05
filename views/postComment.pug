@@ -4,62 +4,35 @@ extends layout
 
 block content
 
-  h1 Recipeoverflow
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
-  header
-    ul
-        li: a(href="/") Home
-        //li: a(href="/api/private") List of users
-        li: a(href="/user/login") Login
-        li: a(href="/user/register") Register
-        li: a(href="/user/logout") Logout
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> 
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    script(type='text/javascript' src='/javascripts/postFront.js' defer='defer')
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> 
+    <nav>
+        <div class="nav-wrapper">
+            <a href="/" class="brand-logo"> ProjectOverFlow</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
 
-  script(type='text/javascript' src='/javascripts/postFront.js' defer='defer')
-
-    
-  <nav>
-    <div class="nav-wrapper">
-      <a href="#" class="brand-logo">Search...</a>
-      <form>
-        <div class="input-field">
-          <input id="search" type="search" required>
-          <label class="label-icon" for="search"><i class="material-icons"></i></label>
-          <i class="material-icons">close</i>
+                if !user
+                    <li><a href="/user/login">Login</a></li>
+                    <li><a href="/user/register">Register</a></li>
+                else
+                    <li><a href="/user/logout">Logout</a></li>
+            </ul>
         </div>
-      </form>
-    </div>
-  </nav>
-
+    </nav>
   
+    if user
+        div(class="container")
+            h5 Question title
+            input(type="text", id="name-text")
+            h4 Type your question here
+            textarea(id="question-text")
+            button(id="submit", type="submit", class="btn") Submit
 
-  div(class="container")
 
-    h5 Question title
-    input(type="text", id="name-text")
-    h4 Type your question here
-    textarea(id="question-text")
 
-    h4 (test) add comment here
-    textarea(id="comment-text")
-    button(id="submit", type="submit", class="btn") Submit
-    <br />
-    p
-    h5 Categories
-    div(id="category-div")
 
-    h6 Add image...?
-    //form(action="/images/" method="post" enctype="multipart/form-data")
-    input(type="file", id="image-input",accept="image/png, image/jpeg", multiple)
-
-    p
-    div(id="recipe-div", class="col")
-      ul(id="instructions-list")
-      ul(id="ingredients-list")
-
-    h5 Searched recipes
-    div(id="fetch-div", class="col")
 

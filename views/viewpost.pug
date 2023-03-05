@@ -1,0 +1,35 @@
+extends layout
+
+block content
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> 
+
+    <nav>
+    <div class="nav-wrapper">
+        <a href="/" class="brand-logo"> ProjectOverFlow</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+
+            if !user
+                <li><a href="/user/login">Login</a></li>
+                <li><a href="/user/register">Register</a></li>
+            else
+                <li><a href="/user/logout">Logout</a></li>
+                <li><a href="/post">Ask a question...</a></li>
+        </ul>
+        </div>
+    </nav>
+
+    div(class="container" id="host-container")
+        div(class="section")
+            h3=post.name
+            h5=post.question
+            each comment in post.comments
+                p=comment
+
+            if user
+                form(name='comment-form' action=`/newcomment/${post.name}` method='POST')
+                    input(name='commentText' type="text", id="comment-text")
+                    button(id="submit", type="submit", class="btn") Submit new comment
+

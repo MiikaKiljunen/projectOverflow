@@ -15,19 +15,26 @@ block content
     <div class="nav-wrapper">
       <a href="" class="brand-logo"> ProjectOverFlow</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="/user/login">Login</a></li>
-        <li><a href="/user/register">Register</a></li>
-        <li><a href="/user/logout">Logout</a></li>
-        <li><a href="/post">Ask a question...</a></li>
+
+          if !user
+            <li><a href="/user/login">Login</a></li>
+            <li><a href="/user/register">Register</a></li>
+          else
+            <li><a href="/user/logout">Logout</a></li>
+            <li><a href="/post">Ask a question...</a></li>
       </ul>
     </div>
   </nav>
 
   <div class="container" id="host-container">
-    <div class="section">
-      <h3 class="light-blue-text">Example post title</h3>
-      <h5 class="">Example post text/question/whatever</h5>
-      <p class="light">Example comment that states that the question is a duplicate from 13 years ago.</p>
+    <div class="section">    
+      <div class="card-panel hoverable">
+        <h3 class="light-blue-text">Example post title</h3>
+        <h5 class="">Example post text/question/whatever</h5>
+        <ul>
+          <li>Example comment that states that the question is a duplicate from 13 years ago.</li>
+        </ul>
+        </div> 
     </div>
   </div>
 

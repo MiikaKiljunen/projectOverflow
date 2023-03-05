@@ -19,13 +19,16 @@ const validateToken = require("../auth/validateToken.js")
 const bcrypt = require("bcryptjs");
 const {body, validationResult} = require("express-validator");
 
-let loginToken;
+const bodyParser = require('body-parser');
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.json());
 
 
 
 
 
-router.get('/post/', function(req, res, next) {
+router.get('/post/', validateToken, function(req, res, next) {
+    res.locals.user = req.user;
     res.render('postComment', { title: 'Ask a question' });
 });
 
@@ -48,21 +51,7 @@ router.get('/recipe/', function(req, res, next) {
 });
 
 
-router.get('/recipe/:id', function(req, res, next) {
 
-    Recipe.find({"name":req.params.id}, (err, recipe) => {
-        if (err){
-            return next(err);
-        }
-        if (recipe.length > 0) {
-            console.log(recipe[0].name)
-            return res.send(recipe[0])
-        } else {
-            return res.status(404).send(`Recipe with name ${req.params.id} not found!`)
-        }
-    })
-
-});
 
 router.post('/recipe/', function(req, res, next) {
 
@@ -74,9 +63,6 @@ router.post('/recipe/', function(req, res, next) {
             new Recipe({
                 name: req.body.name,
                 question: req.body.question,
-                comments: req.body.comments,
-                categories: req.body.categories,
-                images: req.body.images
 
             }).save((err) => {
                 if(err) {
@@ -214,6 +200,42 @@ router.post('/images/', upload.array('images', 12), function(req, res, next) {
     res.send(req.files)
 });
 
+router.get('/posts/:id', validateToken, function(req, res, next) {
+
+    Recipe.find({"name":req.params.id}, (err, recipe) => {
+        if (err){
+            return next(err);
+        }
+        if (recipe.length > 0) {
+            //console.log(recipe[0].name)
+           // return res.send(recipe[0])
+
+            let post = recipe[0]
+            //console.log(post)
+
+            const user = req.user;
+            res.render('viewpost', {post,user}) //pass the post and user as variables to the template engine
+
+        } else {
+            return res.status(404).send(`Recipe with name ${req.params.id} not found!`)
+        }
+    })
+
+});
+
+router.post('/newcomment/:id',function(req,res,next){
+
+    Recipe.find({"name":req.params.id}, (err, recipe) => {
+
+        const post = recipe[0]
+        post.comments.push(req.body.commentText)
+        post.save();
+
+        res.redirect('/posts/'+req.params.id);
+
+    })
+})
+
 
 // ーーーーーーーーーーーーーーーーーーーーーーーー
 
@@ -225,15 +247,12 @@ router.post('/images/', upload.array('images', 12), function(req, res, next) {
 
 
 
-router.get('/private', validateToken, function(req, res, next) {
-    req.headers.authorization = "Bearer "+loginToken;
-    console.log(req.headers)
 
-    User.find({}, function(err,users){
-        if(err) return next(err);
-        res.render('postComment', { title: 'Ask a question' });
-    })
-    res.send({"email": req.body.email})
+
+
+router.get('/', validateToken, function(req, res, next) {
+    res.locals.user = req.user;
+    res.render('index')
 });
 
 //registering
@@ -282,6 +301,16 @@ router.get('/user/login', function(req, res, next) {
     res.render('login');
 });
 
+router.get('/user/logout', function(req, res, next) {
+    res.clearCookie('jwt');
+    res.redirect('/')
+});
+
+// router.post('/user/logout', (req, res) => {
+//     res.clearCookie('jwt');
+//     res.redirect('/');
+// });
+
 router.post('/user/login', 
 body("email").isLength({min: 3}).trim().escape(),
 body("password").isLength({min: 5}),
@@ -311,13 +340,13 @@ function(req, res, next) {
                             expiresIn: 120
                         },
                         function(err,token){
-                            loginToken = token;
-                            res.json({success: true, token, user})
+                            res.cookie('jwt', token, { httpOnly: true });
+                            res.redirect('/')
                         }
                     )
                 }
                 else{
-                    return res.status(403).json({message: "Email or password wrong"})
+                    return res.status(401).json({message: "Email or password wrong"})
                 }
             })
         }
