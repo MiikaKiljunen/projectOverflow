@@ -1,14 +1,3 @@
-const submit = document.getElementById("submit")
-const addInsBtn = document.getElementById("add-instruction")
-const addIngBtn = document.getElementById("add-ingredient")
-const instructionsL = document.getElementById("instructions-list")
-const ingredientsL = document.getElementById("ingredients-list")
-const imageForm = document.getElementById("image-form")
-const searchField = document.getElementById("search")
-const imageDiv = document.getElementById("images")
-const fetchDiv = document.getElementById("fetch-div")
-
-
 submit.onclick = function(){
  
 
